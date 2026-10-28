@@ -1,0 +1,15 @@
+# Obsidian を後付けした場合のマシン固有状態
+.obsidian/workspace*.json
+.obsidian/cache
+.trash/
+
+# 有効なプラグインの一覧は端末ごとに違う (デスクトップに obsidian-git は入れない)。
+# 追跡すると clone/pull で相手の一覧に上書きされ、同期プラグイン自身が無効化される
+.obsidian/community-plugins.json
+
+# モバイルの obsidian-git は PAT を data.json に平文で持つ。
+# .obsidian/ は追跡対象なので、無視しないとトークンごとコミットされる
+.obsidian/plugins/obsidian-git/
+
+.DS_Store
+*.swp

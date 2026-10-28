@@ -1,0 +1,20 @@
+filters:
+  and:
+    - '!file.inFolder("templates")'
+    - or:
+        - and:
+            - type == "task"
+            - status == "pending"
+            - tags.contains("someday")
+        - and:
+            - type == "project"
+            - status == "someday"
+views:
+  - type: table
+    name: いつか
+    order:
+      - file.name
+      - type
+      - description
+      - area
+      - file.folder

@@ -1,0 +1,54 @@
+filters:
+  and:
+    - '!file.inFolder("templates")'
+    - type == "task"
+    - status == "pending"
+    - or:
+        - scheduled && scheduled.date() <= today()
+        - due && due <= today()
+formulas:
+  days_overdue: if(due, (now() - (due + "86399s")).days, 0)
+  u_due: if(due, if(formula.days_overdue >= 7, 1, if(formula.days_overdue >= -14, (formula.days_overdue + 14) * 0.8 / 21 + 0.2, 0.2)), 0)
+  u_age: if(entry, min((now() - entry).days / 365, 1), 1)
+  u_tags: if(tags, if(tags.length >= 3, 1, if(tags.length == 2, 0.9, if(tags.length == 1, 0.8, 0))), 0)
+  u_annotations: if(annotations, if(annotations.length >= 3, 1, if(annotations.length == 2, 0.9, if(annotations.length == 1, 0.8, 0))), 0)
+  u_priority: if(priority == "H", 6, if(priority == "M", 3.9, if(priority == "L", 1.8, 0)))
+  blocks: file.backlinks.filter(value.asFile().properties.status == "pending" && list(value.asFile().properties.depends).contains(file)).length
+  urgency: (if(tags && tags.contains("next"), 15, 0) + 12 * formula.u_due + formula.u_priority + if(scheduled && scheduled < now(), 5, 0) + if(start, 4, 0) + 2 * formula.u_age + formula.u_tags + formula.u_annotations + if(project, 1, 0) + if(formula.blocks > 0, 8, 0) - if(status == "waiting", 3, 0)).round(1)
+properties:
+  description:
+    displayName: 内容
+  formula.blocks:
+    displayName: 止めている数
+  formula.urgency:
+    displayName: 緊急度
+  priority:
+    displayName: 重要度
+  project:
+    displayName: Project
+  scheduled:
+    displayName: 予定
+  due:
+    displayName: 期限
+  estimate:
+    displayName: 見積(分)
+  actual:
+    displayName: 実績(分)
+  waiting_on:
+    displayName: 待ち相手
+  tags:
+    displayName: タグ
+views:
+  - type: table
+    name: 今日
+    order:
+      - file.name
+      - description
+      - scheduled
+      - due
+      - estimate
+      - formula.urgency
+      - project
+    sort:
+      - property: scheduled
+        direction: ASC

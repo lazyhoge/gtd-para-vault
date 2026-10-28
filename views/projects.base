@@ -1,0 +1,53 @@
+filters:
+  and:
+    - '!file.inFolder("templates")'
+    - type == "project"
+properties:
+  outcome:
+    displayName: 完了条件
+  due:
+    displayName: 期限
+  area:
+    displayName: Area
+  goal:
+    displayName: 目標
+  actual:
+    displayName: 実績(分)
+views:
+  - type: table
+    name: 進行中
+    filters:
+      and:
+        - status == "active"
+    order:
+      - file.name
+      - outcome
+      - due
+      - area
+      - goal
+      - actual
+    sort:
+      - property: due
+        direction: ASC
+    columnSize:
+      note.outcome: 361
+  - type: table
+    name: いつか
+    filters:
+      and:
+        - status == "someday"
+    order:
+      - file.name
+      - outcome
+      - area
+  - type: table
+    name: 完了・中止
+    filters:
+      or:
+        - status == "completed"
+        - status == "dropped"
+    order:
+      - file.name
+      - status
+      - outcome
+      - actual

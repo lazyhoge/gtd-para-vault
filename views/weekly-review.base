@@ -1,0 +1,54 @@
+filters:
+  and:
+    - '!file.inFolder("templates")'
+views:
+  - type: table
+    name: 期限切れ・7日以内が期限
+    filters:
+      and:
+        - type == "task" || type == "project" || type == "goal"
+        - status == "pending" || status == "active"
+        - due && due <= today() + "7d"
+    order:
+      - file.name
+      - type
+      - due
+      - project
+    sort:
+      - property: due
+        direction: ASC
+  - type: table
+    name: 連絡待ち
+    filters:
+      and:
+        - type == "task"
+        - status == "pending"
+        - tags.contains("waiting")
+    order:
+      - file.name
+      - waiting_on
+      - modified
+  - type: table
+    name: 未検証の知識
+    filters:
+      and:
+        - type == "note" || type == "agent" || type == "playbook"
+        - "!verified"
+    order:
+      - file.name
+      - description
+      - file.folder
+      - file.mtime
+    sort:
+      - property: file.mtime
+        direction: DESC
+  - type: table
+    name: 古くなった知識
+    filters:
+      and:
+        - stale_after
+        - date(stale_after) <= now()
+    order:
+      - file.name
+      - stale_after
+      - file.folder

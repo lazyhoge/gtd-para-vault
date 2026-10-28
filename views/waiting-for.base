@@ -1,0 +1,42 @@
+filters:
+  and:
+    - '!file.inFolder("templates")'
+    - type == "task"
+    - status == "pending"
+    - tags.contains("waiting")
+formulas:
+  days_waiting: (now() - modified).days.round()
+properties:
+  description:
+    displayName: 内容
+  formula.urgency:
+    displayName: 緊急度
+  priority:
+    displayName: 重要度
+  project:
+    displayName: Project
+  scheduled:
+    displayName: 予定
+  due:
+    displayName: 期限
+  estimate:
+    displayName: 見積(分)
+  actual:
+    displayName: 実績(分)
+  waiting_on:
+    displayName: 待ち相手
+  tags:
+    displayName: タグ
+views:
+  - type: table
+    name: 連絡待ち
+    order:
+      - file.name
+      - description
+      - waiting_on
+      - formula.days_waiting
+      - project
+      - due
+    sort:
+      - property: formula.days_waiting
+        direction: DESC

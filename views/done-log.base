@@ -1,0 +1,58 @@
+filters:
+  and:
+    - '!file.inFolder("templates")'
+    - type == "task"
+    - status == "completed"
+formulas:
+  diff: if(estimate && actual, actual - estimate, "")
+  ratio: if(estimate && actual, (actual / estimate).round(2), "")
+properties:
+  description:
+    displayName: 内容
+  end:
+    displayName: 完了
+  estimate:
+    displayName: 見積(分)
+  actual:
+    displayName: 実績(分)
+  formula.diff:
+    displayName: 差(分)
+  formula.ratio:
+    displayName: 実績/見積
+  project:
+    displayName: Project
+views:
+  - type: table
+    name: 直近7日
+    filters:
+      and:
+        - end >= now() - "7d"
+    order:
+      - file.name
+      - description
+      - end
+      - estimate
+      - actual
+      - formula.diff
+      - formula.ratio
+      - project
+    sort:
+      - property: end
+        direction: DESC
+    summaries:
+      estimate: Sum
+      actual: Sum
+      formula.ratio: Average
+  - type: table
+    name: すべて
+    order:
+      - file.name
+      - description
+      - end
+      - estimate
+      - actual
+      - formula.ratio
+      - project
+    sort:
+      - property: end
+        direction: DESC
