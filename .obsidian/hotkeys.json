@@ -1,0 +1,20 @@
+{
+  "quickadd:choice:d0c86b87-43d0-43fb-8b8d-0929ce0c5be1": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "A"
+    }
+  ],
+  "daily-notes": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "D"
+    }
+  ]
+}
